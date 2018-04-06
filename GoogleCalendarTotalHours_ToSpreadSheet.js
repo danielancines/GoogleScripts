@@ -8,7 +8,7 @@ function onOpen() {
 
 function getCalendars(){
   var calendars = [];
-  var calendarNames = ['Guitarra','Daniel Vargas Ancines'];
+  var calendarNames = ['CALENDAR1','CALENDAR2'];
 
   for each(var calendarName in calendarNames){
     var calendar = CalendarApp.getCalendarsByName(calendarName)[0];
