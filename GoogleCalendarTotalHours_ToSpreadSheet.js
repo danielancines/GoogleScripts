@@ -58,10 +58,13 @@ function googleCalendarEventsHoursCalculator() {
       targetRow++;
       var events = calendar.getEventsForDay(dates[i]);
       for (var j = 0; j < events.length; j++) {
+        var dayHours = getTotalHours(events[j].getEndTime(), events[j].getStartTime());
+        if (dayHours > 4)
+          continue;
 
         var guest = events[j].getGuestByEmail(myEmail);
         if (guest == null || guest.getGuestStatus() === CalendarApp.GuestStatus.YES){
-          totalHours += getTotalHours(events[j].getEndTime(), events[j].getStartTime());
+          totalHours += dayHours;
         }
       }
 
