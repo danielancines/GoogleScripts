@@ -29,6 +29,7 @@ function googleCalendarEventsHoursCalculator() {
   var weekTotalHours = 0;
   var today = new Date();
   var totalHoursPerDay = [];
+  var myEmail = 'MYEMAIL';
 
   sheet.clear();
 
@@ -39,6 +40,7 @@ function googleCalendarEventsHoursCalculator() {
     var targetRow = 1;
     var dates = getDaysOfWeek(today);
     var totalHours = 0;
+    var totalHoursDay = 0;
 
     sheet.setFrozenColumns(1);
 
@@ -56,17 +58,25 @@ function googleCalendarEventsHoursCalculator() {
       targetRow++;
       var events = calendar.getEventsForDay(dates[i]);
       for (var j = 0; j < events.length; j++) {
-        totalHours += getTotalHours(events[j].getEndTime(), events[j].getStartTime());
-        var guest = events[0].getGuestByEmail('daniel.ancines@gmail.com');
+
+        var guest = events[j].getGuestByEmail(myEmail);
+        if (guest == null || guest.getGuestStatus() === CalendarApp.GuestStatus.YES){
+          totalHours += getTotalHours(events[j].getEndTime(), events[j].getStartTime());
+        }
       }
 
+      totalHoursDay += totalHours;
       sheet.getRange(targetRow, column).setFontColor(calendar.getColor()).setValue(totalHours);
       totalHoursPerDay.push({row:targetRow,totalHours:totalHours});
     }
 
+    sheet.getRange(targetRow + 2, column).setFontColor(calendar.getColor()).setValue(totalHoursDay);
+
     sheet.setColumnWidth(column + 1, 30);
     column += 1;
   }
+
+  sheet.getRange(targetRow + 2, 1).setValue('Total');
 
   sheet.getRange(1, ++column).setValue('Total Hours');
 
