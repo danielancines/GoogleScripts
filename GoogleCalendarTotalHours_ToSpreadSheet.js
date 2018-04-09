@@ -6,30 +6,15 @@ function onOpen() {
   spreadsheet.addMenu('Custom Scripts', menuItems);
 }
 
-function getCalendars(){
-  var calendars = [];
-  var calendarNames = ['CALENDAR1','CALENDAR2'];
-
-  for each(var calendarName in calendarNames){
-    var calendar = CalendarApp.getCalendarsByName(calendarName)[0];
-    if (typeof(calendar) === 'undefined')
-      continue;
-
-    calendars.push(calendar)
-  }
-
-  return calendars;
-}
-
-function googleCalendarEventsHoursCalculator() {
+function loadHours(){
   var sheet = SpreadsheetApp.getActiveSheet();
   var cal = CalendarApp.getDefaultCalendar();
   var column = 1;
   var calendars = getCalendars();
   var weekTotalHours = 0;
-  var today = new Date();
+  var today = new Date(sheet.getRange(12, 2).getValue());
   var totalHoursPerDay = [];
-  var myEmail = 'MYEMAIL';
+  var myEmail = 'daniel.ancines@gmail.com';
 
   sheet.clear();
 
@@ -98,6 +83,29 @@ function googleCalendarEventsHoursCalculator() {
   sheet.getRange(1, column+2).setValue("Weekly Hours");
   sheet.getRange(2, column+2).setValue(weekTotalHours);
   sheet.autoResizeColumns(1, calendars.length * 3);
+
+  sheet.getRange(12, 1).setValue('Date');
+  sheet.getRange(12, 2).setValue(today);
+  sheet.autoResizeColumns(1, 2);
+}
+
+function getCalendars(){
+  var calendars = [];
+  var calendarNames = ['Guitarra','Daniel Vargas Ancines'];
+
+  for each(var calendarName in calendarNames){
+    var calendar = CalendarApp.getCalendarsByName(calendarName)[0];
+    if (typeof(calendar) === 'undefined')
+      continue;
+
+    calendars.push(calendar)
+  }
+
+  return calendars;
+}
+
+function googleCalendarEventsHoursCalculator() {
+  loadHours();
 }
 
 function getHoursByRow(arr, row){
